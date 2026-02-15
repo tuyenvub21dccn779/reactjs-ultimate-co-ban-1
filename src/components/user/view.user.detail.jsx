@@ -22,13 +22,17 @@ const ViewUserDetail = (props) => {
             open={isDetailOpen}
             maskClosable={false}
         >
-            {dataDetail && 
-                <div>
+            {dataDetail ? 
+                <>
                     <p>Id: {dataDetail._id}</p> <br />
                     <p>Full Name: {dataDetail.fullName}</p> <br />
                     <p>Email: {dataDetail.email}</p> <br />
                     <p>Phone number: {dataDetail.phone}</p> <br />
-                </div>
+                </>
+                :
+                <>
+                    <p>Không có dữ liệu</p>
+                </>
             }
         </Drawer>
     )
