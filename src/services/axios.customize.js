@@ -1,8 +1,11 @@
 import axios from "axios";
 
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInBob25lIjoiMTIzNDU2Nzg5IiwiZnVsbE5hbWUiOiJJJ20gQWRtaW4iLCJyb2xlIjoiQURNSU4iLCJzdWIiOiI2OTkwODczOTRiZjY3NmNkNmM2N2RjZmEiLCJhdmF0YXIiOiIyMTIzMmYyOTdhNTdhNWE3NDM4OTRhMGU0YTgwMWZjMy5wbmciLCJpYXQiOjE3NzExMzY5MzEsImV4cCI6MTc3MTE3MjkzMX0.Q66IGHVvRmQMwc8FxAEJYiZVzEWmDiPJ-S_p1MzK2rs"
+
 // Set config defaults when creating the instance
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
+  headers: { Authorization: `Bearer ${token}` }
 });
 
 // Alter defaults after instance has been created
