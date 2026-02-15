@@ -18,13 +18,21 @@ const UserForm = () => {
                 message: "create user",
                 description: "Tạo user thành công"
             })
-            setIsModalOpen(false);
+            resetAndCloseModal();
         } else {
             notification.error({
                 message: "create user",
                 description: JSON.stringify(res.message)
             })
         }
+    }
+
+    const resetAndCloseModal = () => {
+        setIsModalOpen(false);
+        setFullName("");
+        setEmail("");
+        setPassword("");
+        setPhone("");
     }
 
     return (
@@ -43,7 +51,7 @@ const UserForm = () => {
                 title="Create user"
                 open={isModalOpen}
                 onOk={() => handleSubmitBtn()}
-                onCancel={() => setIsModalOpen(false)}
+                onCancel={() => resetAndCloseModal()}
                 maskClosable={false}
                 okText={"Create"}
             >
