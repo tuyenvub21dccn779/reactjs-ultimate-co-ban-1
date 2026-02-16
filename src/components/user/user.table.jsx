@@ -8,7 +8,15 @@ import { deleteUserAPI } from '../../services/api.service';
 
 const UserTable = (props) => {
 
-    const { dataUsers, loadUser } = props;
+    const { 
+        dataUsers, 
+        loadUser,
+        current,
+        pageSize,
+        total,
+        setCurrent,
+        setPageSize
+    } = props;
 
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
     const [dataUpdate, setDataUpdate] = useState(null);
@@ -18,7 +26,7 @@ const UserTable = (props) => {
 
     const handleDeleteUser = async (id) => {
         const res = await deleteUserAPI(id);
-        if(res.data) {
+        if (res.data) {
             notification.success({
                 message: "Delete user",
                 description: "Xoá user thành công"
@@ -31,6 +39,10 @@ const UserTable = (props) => {
             })
         }
     }
+
+    const onChange = (pagination, filters, sorter, extra) => { 
+        console.log(">>> check: ", {pagination, filters, sorter, extra});
+    };
 
     const columns = [
         {
@@ -71,7 +83,7 @@ const UserTable = (props) => {
             key: 'action',
             render: (_, record) => (
                 <div style={{ display: "flex", gap: "20px" }}>
-                    <EditOutlined 
+                    <EditOutlined
                         onClick={() => {
                             setDataUpdate(record);
                             setIsModalUpdateOpen(true);
@@ -85,9 +97,9 @@ const UserTable = (props) => {
                         cancelText="No"
                         placement='left'
                     >
-                        <DeleteOutlined 
-                            style={{ cursor: "pointer", color: "red" }} 
-                            
+                        <DeleteOutlined
+                            style={{ cursor: "pointer", color: "red" }}
+
                         />
                     </Popconfirm>
                 </div>
@@ -98,15 +110,25 @@ const UserTable = (props) => {
 
     return (
         <>
-            <Table 
-                columns={columns} 
-                dataSource={dataUsers} 
-                rowKey={"_id"} 
+            <Table
+                columns={columns}
+                dataSource={dataUsers}
+                rowKey={"_id"}
+                pagination={
+                    {
+                        current: current,
+                        pageSize: pageSize,
+                        showSizeChanger: true,
+                        total: total,
+                        showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
+                    }
+                }
+                onChange={onChange}
             />
-            <UpdateUserModal 
+            <UpdateUserModal
                 isModalUpdateOpen={isModalUpdateOpen}
-                setIsModalUpdateOpen={setIsModalUpdateOpen} 
-                dataUpdate={dataUpdate} 
+                setIsModalUpdateOpen={setIsModalUpdateOpen}
+                dataUpdate={dataUpdate}
                 setDataUpdate={setDataUpdate}
                 loadUser={loadUser}
             />
