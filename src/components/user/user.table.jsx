@@ -16,7 +16,7 @@ const UserTable = (props) => {
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [dataDetail, setDataDetail] = useState(null);
 
-    const handleConfirmDeleteBtn = async (id) => {
+    const handleDeleteUser = async (id) => {
         const res = await deleteUserAPI(id);
         if(res.data) {
             notification.success({
@@ -72,7 +72,7 @@ const UserTable = (props) => {
                     <Popconfirm
                         title="Xóa người dùng"
                         description="Bạn chắc chắn xóa user này?"
-                        onConfirm={() => {handleConfirmDeleteBtn(record._id);}}
+                        onConfirm={() => handleDeleteUser(record._id)}
                         okText="Yes"
                         cancelText="No"
                         placement='left'
