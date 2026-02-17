@@ -1,3 +1,4 @@
+import { ArrowRightOutlined } from "@ant-design/icons";
 import { Col, Row, Form, Input, Button, Divider } from "antd";
 import { Link } from "react-router-dom";
 
@@ -30,63 +31,58 @@ const LoginPage = () => {
 
     return (
 
-        <Row justify="center">
-            <Col xs={24} md={12} style={{
-                border: "1px solid #ddd",
-                padding: "16px",
-                borderRadius: "4px",
-                marginTop: "50px",
-            }}>
-                <p style={{ 
-                    position: "relative",
-                    display: "inline-block",
-                    background: "white",
-                    top: "-25px",
-                    fontSize: "medium"
-                 }}>Đăng nhập</p>
-                <Form
-                    form={form}
-                    layout="vertical"
-                    onFinish={onFinish}
-                // style={{ margin: "10px" }}
-                // onFinish={onFinish}
-                // onFinishFailed={onFinishFailed}
-                >
-                    <Form.Item
-                        label="Email"
-                        name="email"
-                        rules={[{ required: true, message: 'Please input your email!' }]}
+        <Row justify="center" style={{ marginTop: "30px" }}>
+            <Col xs={24} md={16} lg={8}>
+                <fieldset style={{
+                    border: "1px solid #ccc",
+                    padding: "15px",
+                    borderRadius: "5px",
+                }}>
+                    <legend>Đăng nhập</legend>
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={onFinish}
+                    // style={{ margin: "10px" }}
+                    // onFinish={onFinish}
+                    // onFinishFailed={onFinishFailed}
                     >
-                        <Input />
-                    </Form.Item>
+                        <Form.Item
+                            label="Email"
+                            name="email"
+                            rules={[{ required: true, message: 'Please input your email!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-                    <Row justify="space-between" align="middle">
-                        <Col>
-                            <Button
-                                onClick={() => form.submit()}
-                                type="primary"
-                            >
-                                Login
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Link to={"/"}>Go to homepage</Link>
-                        </Col>
-                    </Row>
-                    <Divider />
-                    <div style={{ 
-                        textAlign: "center"
-                     }}>
-                        Chưa có tài khoản? <Link to={"/register"}>Đăng ký tại đây</Link>
-                    </div>
-                </Form>
+                        <Form.Item
+                            label="Password"
+                            name="password"
+                            rules={[{ required: true, message: 'Please input your password!' }]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                        <Row justify="space-between" align="middle">
+                            <Col>
+                                <Button
+                                    onClick={() => form.submit()}
+                                    type="primary"
+                                >
+                                    Login
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Link to={"/"}>Go to homepage <ArrowRightOutlined /></Link>
+                            </Col>
+                        </Row>
+                        <Divider />
+                        <div style={{
+                            textAlign: "center"
+                        }}>
+                            Chưa có tài khoản? <Link to={"/register"}>Đăng ký tại đây</Link>
+                        </div>
+                    </Form>
+                </fieldset>
             </Col>
         </Row>
     )
