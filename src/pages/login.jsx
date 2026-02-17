@@ -1,31 +1,32 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { Col, Row, Form, Input, Button, Divider } from "antd";
-import { Link } from "react-router-dom";
+import { Col, Row, Form, Input, Button, Divider, notification, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { loginAPI } from "../services/api.service";
+import { useState } from "react";
 
 const LoginPage = () => {
     const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onFinish = async (values) => {
+        setLoading(true);
         console.log(">>> check values: ", values);
 
-        //call api 
-        // const res = await registerUserAPI(
-        //     values.fullName,
-        //     values.email,
-        //     values.password,
-        //     values.phone);
-        // if (res.data) {
-        //     notification.success({
-        //         message: "Register user",
-        //         description: "Đăng ký user thành công"
-        //     });
-        //     navigate("/login");
-        // } else {
-        //     notification.error({
-        //         message: "Register user error",
-        //         description: JSON.stringify(res.message)
-        //     });
-        // }
+        // call api 
+        const res = await loginAPI(
+            values.email,
+            values.password);
+        if (res.data) {
+            message.success("Đăng nhập thành công");
+            navigate("/");
+        } else {
+            notification.error({
+                message: "Register user error",
+                description: JSON.stringify(res.message)
+            });
+        }
+        setLoading(false);
     }
 
 
@@ -50,7 +51,16 @@ const LoginPage = () => {
                         <Form.Item
                             label="Email"
                             name="email"
-                            rules={[{ required: true, message: 'Please input your email!' }]}
+                            rules={[
+                                { 
+                                    required: true, 
+                                    message: 'Please input your email!' 
+                                },
+                                {
+                                    type: "email",
+                                    message: "Email không đúng định dạng!"
+                                }
+                            ]}
                         >
                             <Input />
                         </Form.Item>
@@ -65,6 +75,7 @@ const LoginPage = () => {
                         <Row justify="space-between" align="middle">
                             <Col>
                                 <Button
+                                    loading={loading}
                                     onClick={() => form.submit()}
                                     type="primary"
                                 >
