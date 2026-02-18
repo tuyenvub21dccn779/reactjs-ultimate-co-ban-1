@@ -3,6 +3,7 @@ import { Button, Popconfirm, Table } from "antd";
 import { useState } from "react";
 import BookDetail from "./book.detail";
 import CreateBookControl from "./create.book.control";
+import CreateBookUncontrol from "./create.book.uncontrol";
 
 const BookTable = (props) => {
 
@@ -169,7 +170,11 @@ const BookTable = (props) => {
                 setIsDetailOpen={setIsDetailOpen}
                 loadBook={loadBook}
             />
-            <CreateBookControl 
+            {/* <CreateBookControl 
+                isCreateOpen={isCreateOpen}
+                setIsCreateOpen={setIsCreateOpen}
+                loadBook={loadBook} /> */}
+            <CreateBookUncontrol 
                 isCreateOpen={isCreateOpen}
                 setIsCreateOpen={setIsCreateOpen}
                 loadBook={loadBook} />
