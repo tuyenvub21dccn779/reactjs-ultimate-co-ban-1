@@ -9,7 +9,7 @@ export default function ErrorPage() {
 
 
             <Result
-                status="403"
+                status="404"
                 title="Oops"
                 subTitle={error.statusText || error.message}
                 extra={<Button type="primary">
