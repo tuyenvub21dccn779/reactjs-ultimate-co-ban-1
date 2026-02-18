@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import BookTable from "../components/book/book.table";
 import { fetchAllBookAPI } from "../services/api.service";
-import BookForm from "../components/book/book.form";
+import CreateBookControl from "../components/book/create.book.control";
 
 const BookPage = () => {
     const [dataBooks, setDataBooks] = useState([]);
@@ -29,7 +29,7 @@ const BookPage = () => {
 
     return (
         <div style={{ padding: "20px" }}>
-            <BookForm loadBook={loadBook} />
+            
             <BookTable 
                 dataBooks={dataBooks} 
                 loadBook={loadBook} 

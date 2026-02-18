@@ -1,7 +1,8 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Popconfirm, Table } from "antd";
+import { Button, Popconfirm, Table } from "antd";
 import { useState } from "react";
 import BookDetail from "./book.detail";
+import CreateBookControl from "./create.book.control";
 
 const BookTable = (props) => {
 
@@ -20,6 +21,8 @@ const BookTable = (props) => {
 
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [dataDetail, setDataDetail] = useState(null);
+
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     const handleDeleteBook = async (id) => {
         // const res = await deleteUserAPI(id);
@@ -135,6 +138,15 @@ const BookTable = (props) => {
 
     return (
         <>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <h3>Table Book</h3>
+                <Button
+                    onClick={() => setIsCreateOpen(true)}
+                    type="primary"
+                >
+                    Create Book
+                </Button>
+            </div>
             <Table
                 columns={columns}
                 dataSource={dataBooks}
@@ -157,6 +169,10 @@ const BookTable = (props) => {
                 setIsDetailOpen={setIsDetailOpen}
                 loadBook={loadBook}
             />
+            <CreateBookControl 
+                isCreateOpen={isCreateOpen}
+                setIsCreateOpen={setIsCreateOpen}
+                loadBook={loadBook} />
         </>
     )
 

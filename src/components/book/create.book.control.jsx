@@ -3,17 +3,15 @@ import { useState } from "react";
 import axios from "axios";
 import { createBookAPI, createUserAPI, handleUploadFile } from "../../services/api.service";
 
-const BookForm = (props) => {
+const CreateBookControl = (props) => {
 
-    const { loadBook } = props;
+    const { isCreateOpen, setIsCreateOpen, loadBook } = props;
 
     const [mainText, setMainText] = useState("");
     const [author, setAuthor] = useState("");
     const [price, setPrice] = useState(null);
     const [quantity, setQuantity] = useState(null);
     const [category, setCategory] = useState("");
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [preview, setPreview] = useState(null)
@@ -37,7 +35,7 @@ const BookForm = (props) => {
     }
 
     const handleSubmitBtn = async () => {
-        if (selectedFile == null || selectedFile == '') {
+        if (!selectedFile) {
             notification.error({
                 message: "create book",
                 description: "Vui lòng upload ảnh thumbnail"
@@ -46,14 +44,14 @@ const BookForm = (props) => {
         }
         const resUpload = await handleUploadFile(selectedFile, "book");
         if (resUpload.data) {
-            console.log({mainText, author, price, quantity, category})
+            const newThumbnail = resUpload.data.fileUploaded;
             const res = await createBookAPI(
                 mainText,
                 author,
                 +price,
                 +quantity,
                 category,
-                resUpload.data.fileUploaded
+                newThumbnail
             );
             if (res.data) {
                 notification.success({
@@ -77,7 +75,7 @@ const BookForm = (props) => {
     }
 
     const resetAndCloseModal = () => {
-        setIsModalOpen(false);
+        setIsCreateOpen(false);
         setMainText("");
         setAuthor("");
         setPrice(null);
@@ -90,18 +88,10 @@ const BookForm = (props) => {
     return (
         <div className="user-form" style={{ margin: "10px 0" }}>
 
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <h3>Table Book</h3>
-                <Button
-                    onClick={() => setIsModalOpen(true)}
-                    type="primary"
-                >
-                    Create Book
-                </Button>
-            </div>
+            
             <Modal
                 title="Create book"
-                open={isModalOpen}
+                open={isCreateOpen}
                 onOk={() => handleSubmitBtn()}
                 onCancel={() => resetAndCloseModal()}
                 maskClosable={false}
@@ -126,9 +116,9 @@ const BookForm = (props) => {
                         <p>Password</p>
                         <InputNumber
                             style={{ width: '100%' }}
-                            suffix="đ"
+                            addonAfter={"đ"}
                             value={price}
-                            onChange={(value) => setPrice(value)}
+                            onChange={(value) => setPrice(+value)}
                         />
                     </div>
                     <div>
@@ -136,7 +126,7 @@ const BookForm = (props) => {
                         <InputNumber
                             style={{ width: '100%' }}
                             value={quantity}
-                            onChange={(value) => setQuantity(value)}
+                            onChange={(value) => setQuantity(+value)}
                         />
                     </div>
                     <div>
@@ -199,4 +189,4 @@ const BookForm = (props) => {
     )
 }
 
-export default BookForm;
+export default CreateBookControl;
