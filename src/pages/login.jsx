@@ -13,7 +13,6 @@ const LoginPage = () => {
 
     const onFinish = async (values) => {
         setLoading(true);
-        console.log(">>> check values: ", values);
 
         // call api 
         const res = await loginAPI(
@@ -74,7 +73,10 @@ const LoginPage = () => {
                             name="password"
                             rules={[{ required: true, message: 'Please input your password!' }]}
                         >
-                            <Input.Password />
+                            <Input.Password onKeyDown={(event) => {
+                                if(event.key === 'Enter') form.submit();
+                            }}
+                            />
                         </Form.Item>
                         <Row justify="space-between" align="middle">
                             <Col>

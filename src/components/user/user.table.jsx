@@ -55,7 +55,6 @@ const UserTable = (props) => {
                 setPageSize(+pagination.pageSize); // "5" => 5
             }
         }
-        console.log(">>> check: ", {pagination, filters, sorter, extra});
     };
 
     const columns = [

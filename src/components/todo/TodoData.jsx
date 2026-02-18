@@ -5,7 +5,6 @@ const TodoData = (props) => {
         deleteTodo(id);
     }
 
-    console.log(">>>> check props: ", todoList);
     return (
         <div className='todo-data'>
             {todoList.map((item, index) => {

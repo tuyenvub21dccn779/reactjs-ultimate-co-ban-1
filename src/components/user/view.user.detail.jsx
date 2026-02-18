@@ -67,7 +67,6 @@ const ViewUserDetail = (props) => {
         // step 2: update user
     }
 
-    console.log(">>> check file: ", preview);
 
     return (
         <Drawer
