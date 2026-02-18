@@ -4,6 +4,7 @@ import { useState } from "react";
 import BookDetail from "./book.detail";
 import CreateBookControl from "./create.book.control";
 import CreateBookUncontrol from "./create.book.uncontrol";
+import UpdateBookControl from "./update.book.control";
 
 const BookTable = (props) => {
 
@@ -177,6 +178,12 @@ const BookTable = (props) => {
             <CreateBookUncontrol 
                 isCreateOpen={isCreateOpen}
                 setIsCreateOpen={setIsCreateOpen}
+                loadBook={loadBook} />
+            <UpdateBookControl
+                isModalUpdateOpen={isModalUpdateOpen}
+                setIsModalUpdateOpen={setIsModalUpdateOpen}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
                 loadBook={loadBook} />
         </>
     )
