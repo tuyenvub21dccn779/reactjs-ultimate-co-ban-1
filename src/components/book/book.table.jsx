@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Popconfirm, Table } from "antd";
 import { useState } from "react";
+import BookDetail from "./book.detail";
 
 const BookTable = (props) => {
 
@@ -148,6 +149,13 @@ const BookTable = (props) => {
                     }
                 }
                 onChange={onChange}
+            />
+            <BookDetail
+                dataDetail={dataDetail}
+                setDataDetail={setDataDetail}
+                isDetailOpen={isDetailOpen}
+                setIsDetailOpen={setIsDetailOpen}
+                loadBook={loadBook}
             />
         </>
     )
