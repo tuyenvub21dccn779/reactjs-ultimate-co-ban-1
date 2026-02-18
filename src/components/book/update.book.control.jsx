@@ -34,7 +34,7 @@ const UpdateBookControl = (props) => {
     const [selectedFile, setSelectedFile] = useState(null)
     const [preview, setPreview] = useState(null)
 
-    
+
     const handleOnChangeFile = (event) => {
         if (!event.target.files || event.target.files.length === 0) {
             setSelectedFile(null);
@@ -61,63 +61,49 @@ const UpdateBookControl = (props) => {
             return;
         }
 
+        let newThumbnail = ""
         if (!selectedFile && preview) {
-            const res = await updateBookAPI(
-                id,
-                mainText,
-                author,
-                +price,
-                +quantity,
-                category,
-                dataUpdate.thumbnail
-            );
-            if (res.data) {
-                notification.success({
-                    message: "update book",
-                    description: "Cập nhật book thành công"
-                })
-                resetAndCloseModal();
-                await loadBook();
-            } else {
-                notification.error({
-                    message: "update book",
-                    description: JSON.stringify(res.message)
-                })
-            }
-            return;
-        }
-        if (selectedFile && preview) {
+            newThumbnail = dataUpdate.thumbnail;
+        } else {
             const resUpload = await handleUploadFile(selectedFile, "book");
             if (resUpload.data) {
-                const newThumbnail = resUpload.data.fileUploaded;
-                const res = await updateBookAPI(
-                    id,
-                    mainText,
-                    author,
-                    +price,
-                    +quantity,
-                    category,
-                    newThumbnail
-                );
-                if (res.data) {
-                    notification.success({
-                        message: "update book",
-                        description: "Cập nhật book thành công"
-                    })
-                    resetAndCloseModal();
-                    await loadBook();
-                } else {
-                    notification.error({
-                        message: "create book",
-                        description: JSON.stringify(res.message)
-                    })
-                }
+                newThumbnail = resUpload.data.fileUploaded;
             } else {
                 notification.error({
-                    message: "create book",
+                    message: "Error upload file",
                     description: JSON.stringify(resUpload.message)
                 })
+                return;
             }
+        }
+
+        await updateBook(newThumbnail);
+
+
+    }
+
+    const updateBook = async (newThumbnail) => {
+        const res = await updateBookAPI(
+            id,
+            mainText,
+            author,
+            +price,
+            +quantity,
+            category,
+            newThumbnail
+        );
+        if (res.data) {
+            notification.success({
+                message: "update book",
+                description: "Cập nhật book thành công"
+            })
+            resetAndCloseModal();
+            await loadBook();
+        } else {
+            notification.error({
+                message: "update book",
+                description: JSON.stringify(res.message)
+            })
         }
     }
 
@@ -226,17 +212,20 @@ const UpdateBookControl = (props) => {
                 </div>
 
 
-                <div style={{
-                    marginTop: "10px",
-                    marginBottom: "15px",
-                    height: "100px", width: "150px",
-                    border: "1px solid #ccc"
-                }}>
-
-                    <img
-                        style={{ height: "100%", width: "100%", objectFit: "contain" }}
-                        src={preview} />
-                </div>
+                {preview &&
+                    <>
+                        <div style={{
+                            marginTop: "10px",
+                            marginBottom: "15px",
+                            height: "100px", width: "150px",
+                            border: "1px solid #ccc"
+                        }}>
+                            <img
+                                style={{ height: "100%", width: "100%", objectFit: "contain" }}
+                                src={preview} />
+                        </div>
+                    </>
+                }
 
 
             </div>
