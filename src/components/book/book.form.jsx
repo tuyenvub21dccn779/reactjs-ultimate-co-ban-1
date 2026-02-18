@@ -1,42 +1,90 @@
-import { Button, Input, Modal, notification } from "antd";
+import { Button, Input, InputNumber, Modal, notification, Select } from "antd";
 import { useState } from "react";
 import axios from "axios";
-import { createUserAPI } from "../../services/api.service";
+import { createBookAPI, createUserAPI, handleUploadFile } from "../../services/api.service";
 
 const BookForm = (props) => {
 
-    const {loadBook} = props;
+    const { loadBook } = props;
 
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("");
+    const [mainText, setMainText] = useState("");
+    const [author, setAuthor] = useState("");
+    const [price, setPrice] = useState(null);
+    const [quantity, setQuantity] = useState(null);
+    const [category, setCategory] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [selectedFile, setSelectedFile] = useState(null)
+    const [preview, setPreview] = useState(null)
+
+
+    const handleOnChangeFile = (event) => {
+        if (!event.target.files || event.target.files.length === 0) {
+            setSelectedFile(null);
+            setPreview(null);
+            return;
+        }
+
+        // I've kept this example simple by using the first image instead of multiple
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            setPreview(URL.createObjectURL(file));
+
+        }
+
+    }
+
     const handleSubmitBtn = async () => {
-        const res = await createUserAPI(fullName, email, password, phone);
-        if(res.data) {
-            notification.success({
-                message: "create user",
-                description: "Tạo user thành công"
-            })
-            resetAndCloseModal();
-            await loadBook();
+        if (selectedFile == null || selectedFile == '') {
+            notification.error({
+                message: "create book",
+                description: "Vui lòng upload ảnh thumbnail"
+            });
+            return;
+        }
+        const resUpload = await handleUploadFile(selectedFile, "book");
+        if (resUpload.data) {
+            console.log({mainText, author, price, quantity, category})
+            const res = await createBookAPI(
+                mainText,
+                author,
+                +price,
+                +quantity,
+                category,
+                resUpload.data.fileUploaded
+            );
+            if (res.data) {
+                notification.success({
+                    message: "create book",
+                    description: "Tạo book thành công"
+                })
+                resetAndCloseModal();
+                await loadBook();
+            } else {
+                notification.error({
+                    message: "create book",
+                    description: JSON.stringify(res.message)
+                })
+            }
         } else {
             notification.error({
-                message: "create user",
-                description: JSON.stringify(res.message)
+                message: "create book",
+                description: JSON.stringify(resUpload.message)
             })
         }
     }
 
     const resetAndCloseModal = () => {
         setIsModalOpen(false);
-        setFullName("");
-        setEmail("");
-        setPassword("");
-        setPhone("");
+        setMainText("");
+        setAuthor("");
+        setPrice(null);
+        setQuantity(null);
+        setCategory("");
+        setSelectedFile(null);
+        setPreview(null);
     }
 
     return (
@@ -52,7 +100,7 @@ const BookForm = (props) => {
                 </Button>
             </div>
             <Modal
-                title="Create user"
+                title="Create book"
                 open={isModalOpen}
                 onOk={() => handleSubmitBtn()}
                 onCancel={() => resetAndCloseModal()}
@@ -61,33 +109,89 @@ const BookForm = (props) => {
             >
                 <div style={{ display: "flex", gap: "15px", flexDirection: "column" }}>
                     <div>
-                        <span>FullName</span>
+                        <span>Tiêu đề</span>
                         <Input
-                            value={fullName}
-                            onChange={(event) => setFullName(event.target.value)}
+                            value={mainText}
+                            onChange={(event) => setMainText(event.target.value)}
                         />
                     </div>
                     <div>
-                        <span>Email</span>
+                        <span>Tác giả</span>
                         <Input
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
+                            value={author}
+                            onChange={(event) => setAuthor(event.target.value)}
                         />
                     </div>
                     <div>
-                        <span>Password</span>
-                        <Input.Password
-                            value={password}
-                            onChange={(event) => setPassword(event.target.value)}
+                        <p>Password</p>
+                        <InputNumber
+                            style={{ width: '100%' }}
+                            suffix="đ"
+                            value={price}
+                            onChange={(value) => setPrice(value)}
                         />
                     </div>
                     <div>
-                        <span>Phone number</span>
-                        <Input
-                            value={phone}
-                            onChange={(event) => setPhone(event.target.value)}
+                        <p>Số lượng</p>
+                        <InputNumber
+                            style={{ width: '100%' }}
+                            value={quantity}
+                            onChange={(value) => setQuantity(value)}
                         />
                     </div>
+                    <div>
+                        <p>Thể loại</p>
+                        <Select
+                            style={{ width: '100%' }}
+                            allowClear
+                            options={[
+                                { value: 'Arts', label: 'Arts' },
+                                { value: 'Business', label: 'Business' },
+                                { value: 'Comics', label: 'Comics' },
+                                { value: 'Cooking', label: 'Cooking' },
+                                { value: 'Entertainment', label: 'Entertainment' },
+                                { value: 'History', label: 'History' },
+                                { value: 'Music', label: 'Music' },
+                                { value: 'Sports', label: 'Sports' },
+                                { value: 'Teen', label: 'Teen' },
+                                { value: 'Travel', label: 'Travel' },
+                            ]}
+                            onChange={(value) => {setCategory(value);}}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor='btnUpload'
+                            style={{
+                                display: "block",
+                                width: "fit-content",
+                                marginTop: "15px",
+                                padding: "5px 10px",
+                                background: "orange",
+                                borderRadius: "5px",
+                                cursor: "pointer"
+                            }}
+                        >Upload</label>
+                        <input
+                            onChange={handleOnChangeFile}
+                            onClick={(event) => {
+                                event.target.value = null;
+                            }}
+                            id='btnUpload' type="file" hidden />
+                    </div>
+                    {preview &&
+                        <>
+                            <div style={{
+                                marginTop: "10px",
+                                marginBottom: "15px",
+                                height: "100px", width: "150px",
+                                border: "1px solid #ccc"
+                            }}>
+                                <img
+                                    style={{ height: "100%", width: "100%", objectFit: "contain" }}
+                                    src={preview} />
+                            </div>
+                        </>
+                    }
                 </div>
             </Modal>
 
