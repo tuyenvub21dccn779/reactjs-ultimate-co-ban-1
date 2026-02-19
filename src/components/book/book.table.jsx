@@ -1,11 +1,12 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Table } from "antd";
+import { Button, notification, Popconfirm, Table } from "antd";
 import { useState } from "react";
 import BookDetail from "./book.detail";
 import CreateBookControl from "./create.book.control";
 import CreateBookUncontrol from "./create.book.uncontrol";
 import UpdateBookControl from "./update.book.control";
 import UpdateBookUncontrol from "./update.book.uncontrol";
+import { deleteBookAPI } from "../../services/api.service";
 
 const BookTable = (props) => {
 
@@ -28,19 +29,19 @@ const BookTable = (props) => {
     const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     const handleDeleteBook = async (id) => {
-        // const res = await deleteUserAPI(id);
-        // if (res.data) {
-        //     notification.success({
-        //         message: "Delete user",
-        //         description: "Xoá user thành công"
-        //     })
-        //     await loadUser();
-        // } else {
-        //     notification.error({
-        //         message: "Delete user",
-        //         description: JSON.stringify(res.message)
-        //     })
-        // }
+        const res = await deleteBookAPI(id);
+        if (res.data) {
+            notification.success({
+                message: "Delete book",
+                description: "Xoá book thành công"
+            })
+            await loadBook();
+        } else {
+            notification.error({
+                message: "Delete book",
+                description: JSON.stringify(res.message)
+            })
+        }
     }
 
     const onChange = (pagination, filters, sorter, extra) => { 
