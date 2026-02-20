@@ -1,24 +1,14 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, notification, Popconfirm, Table } from "antd";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BookDetail from "./book.detail";
 import CreateBookControl from "./create.book.control";
 import CreateBookUncontrol from "./create.book.uncontrol";
 import UpdateBookControl from "./update.book.control";
 import UpdateBookUncontrol from "./update.book.uncontrol";
-import { deleteBookAPI } from "../../services/api.service";
+import { deleteBookAPI, fetchAllBookAPI } from "../../services/api.service";
 
-const BookTable = (props) => {
-
-    const { 
-        dataBooks, 
-        loadBook,
-        current,
-        pageSize,
-        total,
-        setCurrent,
-        setPageSize
-    } = props;
+const BookTable = () => {
 
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
     const [dataUpdate, setDataUpdate] = useState(null);
@@ -27,6 +17,33 @@ const BookTable = (props) => {
     const [dataDetail, setDataDetail] = useState(null);
 
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+    const [loadingTable, setLoadingTable] = useState(false);
+
+    const [dataBooks, setDataBooks] = useState([]);
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [total, setTotal] = useState(0);
+
+   
+
+    const loadBook = useCallback(async () => {
+        setLoadingTable(true);
+        const res = await fetchAllBookAPI(current, pageSize);
+        if(res.data) {
+            setDataBooks(res.data.result);
+            setCurrent(res.data.meta.current);
+            setPageSize(res.data.meta.pageSize);
+            setTotal(res.data.meta.total);
+        }
+        setLoadingTable(false);
+    }, [current, pageSize]);
+
+     //empty array => run once
+    // not empty => next value !== prev value
+    useEffect(() => {
+        loadBook();
+    }, [loadBook]); //[] + condition
 
     const handleDeleteBook = async (id) => {
         const res = await deleteBookAPI(id);
@@ -165,6 +182,7 @@ const BookTable = (props) => {
                     }
                 }
                 onChange={onChange}
+                loading={loadingTable}
             />
             <BookDetail
                 dataDetail={dataDetail}
